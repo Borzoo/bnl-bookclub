@@ -1,5 +1,7 @@
 object Exercise2_2 {
 
+  // Question: How can we make ascending plymorphic/generic ?
+
   private def ascending(a: Int, b:Int) : Boolean = a <= b
 
   private def alfabetic(a: Char, b:Char) : Boolean = a <= b
