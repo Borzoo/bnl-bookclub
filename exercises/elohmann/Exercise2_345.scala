@@ -1,6 +1,9 @@
 object Exercise2_345 {
 
-  private def curry[A,B,C]  (f: (A, B) => C)  : A => (B => C) = a => b => f(a,b)
+  // Exercise 2.3
+
+  private def curry[A,B,C]  (f: (A, B) => C)  : A => (B => C) =
+    a => b => f(a,b)
 
   private def repeat(n: Int, s: String) : String = s * n
 
@@ -23,7 +26,25 @@ object Exercise2_345 {
       true
   }
 
-  def main(args: Array[String]): Unit = if (testCurry()) {
+  // Exercise 2.3
+
+  def uncurry[A,B,C](f: A => B => C): (A, B) => C =
+    (a,b) => f(a)(b)
+
+  private def testUnCurry() : Boolean = {
+    // A: Int
+    // B: String
+    // C: Seq[String]
+    true
+  }
+
+  private def testAll() : Boolean = {
+    testCurry() &&
+    testUnCurry() &&
+    true
+  }
+
+  def main(args: Array[String]): Unit = if (testAll()) {
     println("Ok")
   } else {
     println("Fail")
