@@ -3,6 +3,7 @@ object Exercise2_2 {
   private def ascending(a: Int, b:Int) : Boolean = a <= b
 
   private def isSorted[A](as: Array[A], ordered: (A,A) => Boolean): Boolean = {
+    @annotation.tailrec
     def loop(bs: Array[A]) : Boolean = bs.length < 2 || ordered(bs(0), bs(1)) && loop(bs.drop(1))
     loop(as)
   }
