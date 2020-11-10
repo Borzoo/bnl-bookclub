@@ -9,12 +9,16 @@ object Exercise2_345 {
 
   // Exercise 2.3
 
-  def uncurry[A,B,C](f: A => B => C): (A, B) => C =
+  private def uncurry[A,B,C](f: A => B => C): (A, B) => C =
     (a,b) => f(a)(b)
+
+
+  private def compose[A,B,C](f: B => C, g: A => B): A => C =
+    a => f(g(a))
 
   // Tests
 
-  private def testAll() : Boolean = {
+  private def testCurry() : Boolean = {
     val repeatCurried: Int => String => String = curry(repeat)
     val repeatCopy: (Int, String) => String = uncurry(repeatCurried)
 
@@ -25,6 +29,25 @@ object Exercise2_345 {
       (9, "AB"),
     ).forall { case (n, s) => repeatCopy(n, s) == repeat(n, s) }
   }
+
+  private def testCompose() : Boolean = {
+    def inc(n: Int ): Int = n+1
+    def twice(n: Int): Int = 2*n
+
+    val incThenDouble = compose(twice, inc)
+    val doubleThenInc = compose(inc, twice)
+
+    incThenDouble(3) == 8 &&
+    doubleThenInc(3) == 7 &&
+    incThenDouble(0) == 2 &&
+    doubleThenInc(0) == 1 &&
+    true
+  }
+
+  private def testAll() : Boolean = {
+    testCurry() && testCompose()
+  }
+
 
   def main(args: Array[String]): Unit = if (testAll()) {
     println("Ok")
