@@ -2,6 +2,8 @@ object Exercise2_2 {
 
   private def ascending(a: Int, b:Int) : Boolean = a <= b
 
+  private def alfabetic(a: Char, b:Char) : Boolean = a <= b
+
   private def isSorted[A](as: Array[A], ordered: (A,A) => Boolean): Boolean = {
     @annotation.tailrec
     def sorted(bs: Array[A]) : Boolean = bs.length < 2 || ordered(bs(0), bs(1)) && sorted(bs.drop(1))
@@ -19,6 +21,8 @@ object Exercise2_2 {
     true == isSorted(Array(1,1,1,1,2), ascending) &&
     false == isSorted(Array(2,1), ascending) &&
     false == isSorted(Array(3,4,1,2), ascending) &&
+    true == isSorted(Array('a','b','c'), alfabetic) &&
+    false == isSorted(Array('a','B'), alfabetic) &&
     true == isSorted(Array(), ascending)
   }
 
