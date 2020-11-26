@@ -137,6 +137,14 @@ object Chapter3 {
       foldLeft(l, Nil: Lijst[E])((l, e) => Cons(e, l))
     }
 
+    /** ********************* Exercise 3.13: *******************************/
+
+    // Later
+
+    /** ********************* Exercise 3.14: *******************************/
+
+    def append[E](xs: Lijst[E], ys: Lijst[E]): Lijst[E] = foldLeft(reverse(xs), ys)( (l,e) => Cons(e, l) )
+
     // Utility
 
     def apply[E](xs: E*): Lijst[E] =
@@ -205,6 +213,8 @@ object Chapter3 {
     println(s"reverse(Nil) = ${Lijst.reverse(Nil).show}")
     println(s"reverse(Lijst(3)) = ${Lijst.reverse(Lijst(3)).show}")
     println(s"reverse(short) = ${Lijst.reverse(short).show}")
+
+    println(Lijst.append(short, short).show)
 
     println("Ok")
   }
