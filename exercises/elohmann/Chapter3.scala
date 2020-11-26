@@ -5,11 +5,11 @@ import scala.annotation.tailrec
 object Chapter3 {
 
   sealed trait Lijst[+E] {
-    def show[E]: String
+    def show[E2]: String
   }
 
   case object Nil extends Lijst[Nothing] {
-    def show[E] = "Nil"
+    def show[E2] = "Nil"
   }
 
   case class Cons[+E](h: E, t: Lijst[E]) extends Lijst[E] { // Why not extends Lijst[+E]
@@ -18,13 +18,13 @@ object Chapter3 {
 
     // Question: How to write equals
 
-    def show[E]: String = {
-      def doIt(l: Lijst[E]): String = l match {
+    def show[E2]: String = {
+      def doIt(l: Lijst[E2]): String = l match {
         case Nil => "Nil"
         case Cons(h, t) => h + ", " + doIt(t)
       }
 
-      val s = doIt(this.asInstanceOf[Lijst[E]])
+      val s = doIt(this.asInstanceOf[Lijst[E2]])
 
       s"($s)"
     }
@@ -145,6 +145,11 @@ object Chapter3 {
 
     def append[E](xs: Lijst[E], ys: Lijst[E]): Lijst[E] = foldLeft(reverse(xs), ys)( (l,e) => Cons(e, l) )
 
+    /** ********************* Exercise 3.15: *******************************/
+
+      // fold append over lists
+    def flatten[E](ls: Lijst[Lijst[E]]): Lijst[E] = foldLeft(ls, Nil:Lijst[E])( (l1, l2) => append(l1, l2) )
+
     // Utility
 
     def apply[E](xs: E*): Lijst[E] =
@@ -215,6 +220,12 @@ object Chapter3 {
     println(s"reverse(short) = ${Lijst.reverse(short).show}")
 
     println(Lijst.append(short, short).show)
+
+    println(s"flatten(Nil) = ${Lijst.flatten(Nil)}")
+    println(s"flatten(Lijst(Nil)) = ${Lijst.flatten(Lijst(Nil))}")
+    println(s"flatten(Lijst(Nil, Nil)) = ${Lijst.flatten(Lijst(Nil, Nil))}")
+    println(s"flatten(Lijst(Nil, short, Nil)) = ${Lijst.flatten(Lijst(Nil, short, Nil)).show}")
+    println(s"flatten(Lijst(Nil, short,Nil, short) = ${Lijst.flatten(Lijst(Nil, short, Nil, short)).show}")
 
     println("Ok")
   }
