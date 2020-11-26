@@ -1,4 +1,4 @@
-
+import Chapter3.Lijst.foldRight
 
 object Chapter3 {
 
@@ -32,11 +32,11 @@ object Chapter3 {
   object Lijst {
 
 
-    // Exercise 3.1:
+    /*********************** Exercise 3.1: *******************************/
 
     // 3rd case 1+2 = 3
 
-    // Exercise 3.2
+    /*********************** Exercise 3.2: *******************************/
 
     def tail[E](xs: Lijst[E]): Lijst[E] = xs match {
       case Nil => Nil
@@ -48,14 +48,15 @@ object Chapter3 {
       case Cons(_, xs) => Some(xs)
     }
 
-    // Exercise 3.3
+    /*********************** Exercise 3.3: *******************************/
 
     def setHead[E](xs: Lijst[E], n: E): Lijst[E] = xs match {
       case Nil => Nil // There is no element to replace, otherwise Cons(n, Nil)
       case Cons(_, t) => Cons(n, t)
     }
 
-    // Exercise 3.4
+    /*********************** Exercise 3.4: *******************************/
+
 
     def drop[E](xs: Lijst[E], n: Int): Lijst[E] = if (n < 1) xs
     else xs match {
@@ -63,7 +64,7 @@ object Chapter3 {
       case Cons(_, t) => drop(t, n - 1)
     }
 
-    // Exercise 3.5
+    /*********************** Exercise 3.5: *******************************/
 
     def dropWhile[E](xs: Lijst[E], f: E => Boolean): Lijst[E] = xs match {
       case Nil => Nil
@@ -71,7 +72,7 @@ object Chapter3 {
       case Cons(h, t) if !f(h) => Cons(h, t)
     }
 
-    // Exercise 3.6
+    /*********************** Exercise 3.6: *******************************/
 
     def init[E](l: Lijst[E]): Lijst[E] = l match {
       case Nil => Nil
@@ -81,6 +82,36 @@ object Chapter3 {
 
     // We have no access to the (second to) last element, except walking the list
 
+    /*********************** Exercise 3.7: *******************************/
+
+    def foldRight[A,B](l: Lijst[A], z: B)(f: (A,B) => B): B = l match {
+      case Nil => z
+      case Cons(h,t) => f(h, foldRight(t,z)(f))
+    }
+
+    def product(l: Lijst[Double]): Double = foldRight(l, 1.0)(_ * _)
+
+    // This foldRight always recurs to the end of the list so no shortcutting
+
+    def shortcutFoldRight[E,R](l: Lijst[E], z: R, s: E)(f: (E,R) => R) : R = {
+      print(".")
+      l match {
+        case Nil => z
+        case Cons(x,_) if x == s => f(x,z)  // Question: case Cons(s,_) => f(s,z) does not work
+        case Cons(h,t) => f(h,shortcutFoldRight(t,z,s)(f))
+      }
+    }
+
+    def shortcutProduct(l: Lijst[Double]): Double = shortcutFoldRight(l, 1.0, 0.0)(_ * _)
+
+    /*********************** Exercise 3.8: *******************************/
+
+    // foldRight(Lijst(1,2,3), Nil:Lijst[Int])(Cons(_,_)) = Lijst(1,2,3)
+    // They are right associative?
+
+    /*********************** Exercise 3.9: *******************************/
+
+    def length[E](xs: Lijst[E]) : Int = foldRight(xs, 0)( (_,l) => l+1 )
 
     // Utility
 
@@ -117,6 +148,26 @@ object Chapter3 {
 
     display("init(long)", Lijst.init(long))
 
+    val ds0 = Lijst(
+      1.0, 2.0, 0.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0,
+      1.0, 2.0, 0.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0,
+      1.0, 2.0, 0.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0,
+      1.0, 2.0, 0.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0,
+      1.0, 2.0, 0.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0,
+      1.0, 2.0, 0.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0,
+      1.0, 2.0, 0.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0,
+      1.0, 2.0, 0.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0,
+      1.0, 2.0, 0.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0
+    )
+
+    println(s"product(ds0): ${Lijst.product(ds0)}" )
+    println(s"shortcutProduct(ds0): ${Lijst.shortcutProduct(ds0)}" )
+
+    println("exercise 3.8: ", foldRight(Lijst(1,2,3), Nil:Lijst[Int])(Cons(_,_)) )
+
+    println(s"length(short) = ${Lijst.length(short)}")
+    println(s"length(long) = ${Lijst.length(long)}")
+    println(s"length(ds0) = ${Lijst.length(ds0)}")
 
     println("Ok")
   }
