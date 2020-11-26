@@ -14,7 +14,7 @@ object Chapter3 {
 
   case class Cons[+E](h: E, t: Lijst[E]) extends Lijst[E] { // Why not extends Lijst[+E]
 
-    // Question: how to override tostring genericly
+    // Question: how to override tostring generically
 
     // Question: How to write equals
 
@@ -58,7 +58,7 @@ object Chapter3 {
 
     /** ********************* Exercise 3.4: *******************************/
 
-
+    @tailrec
     def drop[E](xs: Lijst[E], n: Int): Lijst[E] = if (n < 1) xs
     else xs match {
       case Nil => Nil
@@ -67,6 +67,7 @@ object Chapter3 {
 
     /** ********************* Exercise 3.5: *******************************/
 
+    @tailrec
     def dropWhile[E](xs: Lijst[E], f: E => Boolean): Lijst[E] = xs match {
       case Nil => Nil
       case Cons(h, t) if !f(h) => Cons(h, t)
@@ -77,7 +78,7 @@ object Chapter3 {
 
     def init[E](l: Lijst[E]): Lijst[E] = l match {
       case Nil => Nil
-      case Cons(h, Nil) => Nil // Cut off last element
+      case Cons(_, Nil) => Nil // Cut off last element
       case Cons(h, t) => Cons(h, init(t))
     }
 
@@ -119,7 +120,7 @@ object Chapter3 {
     @tailrec
     def foldLeft[E, R](l: Lijst[E], z: R)(f: (R, E) => R): R = l match {
       case Nil => z
-      case Cons(h, t) => foldLeft(t, f(z, h))(f)  // Googled some
+      case Cons(h, t) => foldLeft(t, f(z, h))(f) // Googled some
     }
 
     /** ********************* Exercise 3.11: *******************************/
@@ -138,34 +139,51 @@ object Chapter3 {
 
     /** ********************* Exercise 3.13: *******************************/
 
-    def foldRightFromLeft[E, R](l: Lijst[E], z: R)(f: (E, R) => R): R = foldLeft(reverse(l),z)( (a,b) => f(b,a))
+    def foldRightFromLeft[E, R](l: Lijst[E], z: R)(f: (E, R) => R): R = foldLeft(reverse(l), z)((a, b) => f(b, a))
 
-    def foldLeftFromRight[E, R](l: Lijst[E], z: R)(f: (R, E) => R): R = foldRight(reverse(l), z)( (a,b) => f(b,a) )
+    def foldLeftFromRight[E, R](l: Lijst[E], z: R)(f: (R, E) => R): R = foldRight(reverse(l), z)((a, b) => f(b, a))
 
     /** ********************* Exercise 3.14: *******************************/
 
-    def append[E](xs: Lijst[E], ys: Lijst[E]): Lijst[E] = foldLeft(reverse(xs), ys)( (l,e) => Cons(e, l) )
+    def append[E](xs: Lijst[E], ys: Lijst[E]): Lijst[E] = foldLeft(reverse(xs), ys)((l, e) => Cons(e, l))
 
     /** ********************* Exercise 3.15: *******************************/
 
-      // fold append over lists
-    def flatten[E](ls: Lijst[Lijst[E]]): Lijst[E] = foldLeft(ls, Nil:Lijst[E])( (l1, l2) => append(l1, l2) )
+    // fold append over lists
+    def flatten[E](ls: Lijst[Lijst[E]]): Lijst[E] = foldLeft(ls, Nil: Lijst[E])((l1, l2) => append(l1, l2))
 
     /** ********************* Exercise 3.16: *******************************/
 
-    def add1(xs: Lijst[Int]) : Lijst[Int] = xs match {
+    def add1(xs: Lijst[Int]): Lijst[Int] = xs match {
       case Nil => Nil
-      case Cons(h, t) => Cons(h+1, add1(t) )
+      case Cons(h, t) => Cons(h + 1, add1(t))
     }
+
+    def add2(xs: Lijst[Int]): Lijst[Int] = foldLeft(reverse(xs), Nil: Lijst[Int]) { (is, i) => Cons(i + 2, is) }
+
+    def add3(xs: Lijst[Int]): Lijst[Int] = reverse(foldLeft(xs, Nil: Lijst[Int]) { (is, i) => Cons(i + 3, is) })
+
+    def add4(xs: Lijst[Int]): Lijst[Int] = foldRight(xs, Nil: Lijst[Int]) { (i, is) => Cons(i + 4, is) }
 
     /** ********************* Exercise 3.17: *******************************/
 
-    def doublesToStrings(xs: Lijst[Double]) : Lijst[String] = xs match {
+    def doublesToStrings0(xs: Lijst[Double]): Lijst[String] = xs match {
       case Nil => Nil
-      case Cons(h, t) => Cons( h.toString, doublesToStrings(t) )
+      case Cons(h, t) => Cons(h.toString, doublesToStrings(t))
     }
 
-// Utility
+    def doublesToStrings(xs: Lijst[Double]): Lijst[String] = foldRight(xs, Nil: Lijst[String]) { (d, ss) => Cons(d.toString, ss) }
+
+    /** ********************* Exercise 3.18: *******************************/
+
+    def map0[A, B](xs: Lijst[A])(f: A => B): Lijst[B] = xs match {
+      case Nil => Nil
+      case Cons(h, t) => Cons(f(h), map0(t)(f))
+    }
+
+    def map[A, B](xs: Lijst[A])(f: A => B): Lijst[B] = foldRight(xs, Nil: Lijst[B]) { (a, bs) => Cons(f(a), bs) }
+
+    // Utility
 
     def apply[E](xs: E*): Lijst[E] =
       if (xs.isEmpty) Nil
@@ -232,13 +250,18 @@ object Chapter3 {
     println(s"flatten(Lijst(Nil, short, Nil)) = ${Lijst.flatten(Lijst(Nil, short, Nil)).show}")
     println(s"flatten(Lijst(Nil, short,Nil, short) = ${Lijst.flatten(Lijst(Nil, short, Nil, short)).show}")
 
-    println(s"foldRightFromLeft(short,0)(-) = ${Lijst.foldRightFromLeft(short,0)(_ - _)}")
+    println(s"foldRightFromLeft(short,0)(-) = ${Lijst.foldRightFromLeft(short, 0)(_ - _)}")
 
-    println(s"foldLeftFromRight(short,0)(-) = ${Lijst.foldLeftFromRight(short,0)(_ - _)}")
+    println(s"foldLeftFromRight(short,0)(-) = ${Lijst.foldLeftFromRight(short, 0)(_ - _)}")
 
-    println(s"add1(short) = ${Lijst.add1(short).show}" )
+    println(s"add1(short) = ${Lijst.add1(short).show}")
+    println(s"add2(short) = ${Lijst.add2(short).show}")
+    println(s"add3(short) = ${Lijst.add3(short).show}")
+    println(s"add4(short) = ${Lijst.add4(short).show}")
 
     println(s"doublesToStrings(ds0) = ${Lijst.doublesToStrings(ds0).show}")
+
+    println(s"""map(short)( "a" * _ ) = ${Lijst.map(short)("a" * _).show}""")
 
     println("Ok")
   }
