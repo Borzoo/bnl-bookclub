@@ -158,7 +158,12 @@ object Chapter3 {
       case Cons(h, t) => Cons(h+1, add1(t) )
     }
 
+    /** ********************* Exercise 3.17: *******************************/
 
+    def doublesToStrings(xs: Lijst[Double]) : Lijst[String] = xs match {
+      case Nil => Nil
+      case Cons(h, t) => Cons( h.toString, doublesToStrings(t) )
+    }
 
 // Utility
 
@@ -232,6 +237,8 @@ object Chapter3 {
     println(s"foldLeftFromRight(short,0)(-) = ${Lijst.foldLeftFromRight(short,0)(_ - _)}")
 
     println(s"add1(short) = ${Lijst.add1(short).show}" )
+
+    println(s"doublesToStrings(ds0) = ${Lijst.doublesToStrings(ds0).show}")
 
     println("Ok")
   }
