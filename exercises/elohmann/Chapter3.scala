@@ -5,11 +5,11 @@ import scala.annotation.tailrec
 object Chapter3 {
 
   sealed trait Lijst[+E] {
-    def show[E](): String
+    def show[E]: String
   }
 
   case object Nil extends Lijst[Nothing] {
-    def show[E]() = "Empty"
+    def show[E] = "Nil"
   }
 
   case class Cons[+E](h: E, t: Lijst[E]) extends Lijst[E] { // Why not extends Lijst[+E]
@@ -18,9 +18,9 @@ object Chapter3 {
 
     // Question: How to write equals
 
-    def show[E](): String = {
+    def show[E]: String = {
       def doIt(l: Lijst[E]): String = l match {
-        case Nil => "Empty"
+        case Nil => "Nil"
         case Cons(h, t) => h + ", " + doIt(t)
       }
 
@@ -125,11 +125,17 @@ object Chapter3 {
 
     /** ********************* Exercise 3.11: *******************************/
 
-    def sumL(l: Lijst[Int]) : Int = Lijst.foldLeft(l, 0)(_ + _)
+    def sumL(l: Lijst[Int]): Int = Lijst.foldLeft(l, 0)(_ + _)
 
-    def productL(l: Lijst[Double]) : Double = Lijst.foldLeft(l, 1.0)(_ * _)
+    def productL(l: Lijst[Double]): Double = Lijst.foldLeft(l, 1.0)(_ * _)
 
-    def lengthL[E](l: Lijst[E]) : Int = Lijst.foldLeft(l, 0)( (l, _) => l+1  )
+    def lengthL[E](l: Lijst[E]): Int = Lijst.foldLeft(l, 0)((l, _) => l + 1)
+
+    /** ********************* Exercise 3.12: *******************************/
+
+    def reverse[E](l: Lijst[E]): Lijst[E] = {
+      foldLeft(l, Nil: Lijst[E])((l, e) => Cons(e, l))
+    }
 
     // Utility
 
@@ -143,7 +149,7 @@ object Chapter3 {
     val short = Lijst(1, 2, 3, 4, 5)
     val long = Lijst(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
 
-    def display[E](m: String, l: Lijst[E]): Unit = println(s"$m: ${l.show[E]()}")
+    def display[E](m: String, l: Lijst[E]): Unit = println(s"$m: ${l.show[E]}")
 
     display("tail(Nil)", Lijst.tail(Nil))
     display("tail(short)", Lijst.tail(short))
@@ -186,15 +192,19 @@ object Chapter3 {
     println(s"length(long) = ${Lijst.lengthR(long)}")
     println(s"length(ds0) = ${Lijst.lengthR(ds0)}")
 
-    println(s"foldLeft(1,2,3,4,5)(+) = ${Lijst.foldLeft(short, 0)(_+ _)}")
+    println(s"foldLeft(1,2,3,4,5)(+) = ${Lijst.foldLeft(short, 0)(_ + _)}")
     println(s"foldLeft(1,2,3,4,5)(-) = ${Lijst.foldLeft(short, 0)(_ - _)}")
 
-    println(s"foldRight(1,2,3,4,5)(+) = ${Lijst.foldRight(short, 0)(_+ _)}")
+    println(s"foldRight(1,2,3,4,5)(+) = ${Lijst.foldRight(short, 0)(_ + _)}")
     println(s"foldRight(1,2,3,4,5)(-) = ${Lijst.foldRight(short, 0)(_ - _)}")
 
     println(s"sumL(short) = ${Lijst.sumL(short)}")
     println(s"lengthL(short) = ${Lijst.lengthL(short)}")
     println(s"productL(ds0) = ${Lijst.productL(ds0)}")
+
+    println(s"reverse(Nil) = ${Lijst.reverse(Nil).show}")
+    println(s"reverse(Lijst(3)) = ${Lijst.reverse(Lijst(3)).show}")
+    println(s"reverse(short) = ${Lijst.reverse(short).show}")
 
     println("Ok")
   }
