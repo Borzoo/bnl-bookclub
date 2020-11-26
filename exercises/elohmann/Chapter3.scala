@@ -113,7 +113,7 @@ object Chapter3 {
 
     /** ********************* Exercise 3.9: *******************************/
 
-    def length[E](xs: Lijst[E]): Int = foldRight(xs, 0)((_, l) => l + 1)
+    def lengthR[E](xs: Lijst[E]): Int = foldRight(xs, 0)((_, l) => l + 1)
 
     /** ********************* Exercise 3.10: *******************************/
 
@@ -122,6 +122,14 @@ object Chapter3 {
       case Nil => z
       case Cons(h, t) => foldLeft(t, f(z, h))(f)
     }
+
+    /** ********************* Exercise 3.11: *******************************/
+
+    def sumL(l: Lijst[Int]) : Int = Lijst.foldLeft(l, 0)(_ + _)
+
+    def productL(l: Lijst[Double]) : Double = Lijst.foldLeft(l, 1.0)(_ * _)
+
+    def lengthL[E](l: Lijst[E]) : Int = Lijst.foldLeft(l, 0)( (l, _) => l+1  )
 
     // Utility
 
@@ -174,15 +182,19 @@ object Chapter3 {
 
     println("exercise 3.8: ", foldRight(Lijst(1, 2, 3), Nil: Lijst[Int])(Cons(_, _)))
 
-    println(s"length(short) = ${Lijst.length(short)}")
-    println(s"length(long) = ${Lijst.length(long)}")
-    println(s"length(ds0) = ${Lijst.length(ds0)}")
+    println(s"length(short) = ${Lijst.lengthR(short)}")
+    println(s"length(long) = ${Lijst.lengthR(long)}")
+    println(s"length(ds0) = ${Lijst.lengthR(ds0)}")
 
     println(s"foldLeft(1,2,3,4,5)(+) = ${Lijst.foldLeft(short, 0)(_+ _)}")
     println(s"foldLeft(1,2,3,4,5)(-) = ${Lijst.foldLeft(short, 0)(_ - _)}")
 
     println(s"foldRight(1,2,3,4,5)(+) = ${Lijst.foldRight(short, 0)(_+ _)}")
     println(s"foldRight(1,2,3,4,5)(-) = ${Lijst.foldRight(short, 0)(_ - _)}")
+
+    println(s"sumL(short) = ${Lijst.sumL(short)}")
+    println(s"lengthL(short) = ${Lijst.lengthL(short)}")
+    println(s"productL(ds0) = ${Lijst.productL(ds0)}")
 
     println("Ok")
   }
