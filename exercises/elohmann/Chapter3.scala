@@ -33,7 +33,6 @@ object Chapter3 {
 
   object Lijst {
 
-
     /** ********************* Exercise 3.1: *******************************/
 
     // 3rd case 1+2 = 3
@@ -70,8 +69,8 @@ object Chapter3 {
 
     def dropWhile[E](xs: Lijst[E], f: E => Boolean): Lijst[E] = xs match {
       case Nil => Nil
-      case Cons(h, t) if f(h) => dropWhile(t, f)
       case Cons(h, t) if !f(h) => Cons(h, t)
+      case Cons(h, t) if f(h) => dropWhile(t, f)
     }
 
     /** ********************* Exercise 3.6: *******************************/
@@ -120,7 +119,7 @@ object Chapter3 {
     @tailrec
     def foldLeft[E, R](l: Lijst[E], z: R)(f: (R, E) => R): R = l match {
       case Nil => z
-      case Cons(h, t) => foldLeft(t, f(z, h))(f)
+      case Cons(h, t) => foldLeft(t, f(z, h))(f)  // Googled some
     }
 
     /** ********************* Exercise 3.11: *******************************/
@@ -140,6 +139,11 @@ object Chapter3 {
     /** ********************* Exercise 3.13: *******************************/
 
     // Later
+
+    def foldRightFromLeft[E, R](l: Lijst[E], z: R)(f: (E, R) => R): R = {
+      val r = reverse(l)
+      foldLeft(r,z)( (a,b) => f(b,a))
+    }
 
     /** ********************* Exercise 3.14: *******************************/
 
@@ -184,17 +188,7 @@ object Chapter3 {
 
     display("init(long)", Lijst.init(long))
 
-    val ds0 = Lijst(
-      1.0, 2.0, 0.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0,
-      1.0, 2.0, 0.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0,
-      1.0, 2.0, 0.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0,
-      1.0, 2.0, 0.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0,
-      1.0, 2.0, 0.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0,
-      1.0, 2.0, 0.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0,
-      1.0, 2.0, 0.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0,
-      1.0, 2.0, 0.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0,
-      1.0, 2.0, 0.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0
-    )
+    val ds0 = Lijst(1.0, 2.0, 0.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0)
 
     println(s"product(ds0): ${Lijst.product(ds0)}")
     println(s"shortcutProduct(ds0): ${Lijst.shortcutProduct(ds0)}")
@@ -226,6 +220,8 @@ object Chapter3 {
     println(s"flatten(Lijst(Nil, Nil)) = ${Lijst.flatten(Lijst(Nil, Nil))}")
     println(s"flatten(Lijst(Nil, short, Nil)) = ${Lijst.flatten(Lijst(Nil, short, Nil)).show}")
     println(s"flatten(Lijst(Nil, short,Nil, short) = ${Lijst.flatten(Lijst(Nil, short, Nil, short)).show}")
+
+    println(s"foldRightFromLeft(short,0)(-) = ${Lijst.foldRightFromLeft(short,0)(_ - _)}")
 
     println("Ok")
   }
