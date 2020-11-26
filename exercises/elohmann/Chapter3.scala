@@ -151,7 +151,16 @@ object Chapter3 {
       // fold append over lists
     def flatten[E](ls: Lijst[Lijst[E]]): Lijst[E] = foldLeft(ls, Nil:Lijst[E])( (l1, l2) => append(l1, l2) )
 
-    // Utility
+    /** ********************* Exercise 3.16: *******************************/
+
+    def add1(xs: Lijst[Int]) : Lijst[Int] = xs match {
+      case Nil => Nil
+      case Cons(h, t) => Cons(h+1, add1(t) )
+    }
+
+
+
+// Utility
 
     def apply[E](xs: E*): Lijst[E] =
       if (xs.isEmpty) Nil
@@ -221,6 +230,8 @@ object Chapter3 {
     println(s"foldRightFromLeft(short,0)(-) = ${Lijst.foldRightFromLeft(short,0)(_ - _)}")
 
     println(s"foldLeftFromRight(short,0)(-) = ${Lijst.foldLeftFromRight(short,0)(_ - _)}")
+
+    println(s"add1(short) = ${Lijst.add1(short).show}" )
 
     println("Ok")
   }
