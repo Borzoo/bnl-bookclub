@@ -138,12 +138,9 @@ object Chapter3 {
 
     /** ********************* Exercise 3.13: *******************************/
 
-    // Later
+    def foldRightFromLeft[E, R](l: Lijst[E], z: R)(f: (E, R) => R): R = foldLeft(reverse(l),z)( (a,b) => f(b,a))
 
-    def foldRightFromLeft[E, R](l: Lijst[E], z: R)(f: (E, R) => R): R = {
-      val r = reverse(l)
-      foldLeft(r,z)( (a,b) => f(b,a))
-    }
+    def foldLeftFromRight[E, R](l: Lijst[E], z: R)(f: (R, E) => R): R = foldRight(reverse(l), z)( (a,b) => f(b,a) )
 
     /** ********************* Exercise 3.14: *******************************/
 
@@ -222,6 +219,8 @@ object Chapter3 {
     println(s"flatten(Lijst(Nil, short,Nil, short) = ${Lijst.flatten(Lijst(Nil, short, Nil, short)).show}")
 
     println(s"foldRightFromLeft(short,0)(-) = ${Lijst.foldRightFromLeft(short,0)(_ - _)}")
+
+    println(s"foldLeftFromRight(short,0)(-) = ${Lijst.foldLeftFromRight(short,0)(_ - _)}")
 
     println("Ok")
   }
