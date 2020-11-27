@@ -201,6 +201,13 @@ object Chapter3 {
       if (f(a)) Cons(a, as) else as
     }
 
+    /** ********************* Exercise 3.20: *******************************/
+
+    def flatMap[A, B](xs: Lijst[A])(f: A => Lijst[B]): Lijst[B] = foldRight(xs, Nil:Lijst[B]) {
+      (a, bs) => append(f(a), bs)
+    }
+
+
     // Utility
 
     def apply[E](xs: E*): Lijst[E] =
@@ -283,6 +290,7 @@ object Chapter3 {
 
     println(s"filter(short)(even) = ${Lijst.filter(long)(i => 0 == i % 2).show}")
 
+    println("Lijst.flatMap(short){ i => Lijst(i,i )} = " +  Lijst.flatMap(short){ i => Lijst(i,i) }.show )
 
     println("Ok")
   }
