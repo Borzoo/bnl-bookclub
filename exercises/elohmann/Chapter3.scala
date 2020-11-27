@@ -203,19 +203,28 @@ object Chapter3 {
 
     /** ********************* Exercise 3.20: *******************************/
 
-    def flatMap[A, B](xs: Lijst[A])(f: A => Lijst[B]): Lijst[B] = foldRight(xs, Nil:Lijst[B]) {
+    def flatMap[A, B](xs: Lijst[A])(f: A => Lijst[B]): Lijst[B] = foldRight(xs, Nil: Lijst[B]) {
       (a, bs) => append(f(a), bs)
     }
 
     /** ********************* Exercise 3.21: *******************************/
 
-    def filter[A](l: Lijst[A])(f: A => Boolean): Lijst[A] = flatMap(l){ a =>
-      if ( f(a) ) Lijst(a)
+    def filter[A](l: Lijst[A])(f: A => Boolean): Lijst[A] = flatMap(l) { a =>
+      if (f(a)) Lijst(a)
       else Nil
     }
 
+    /** ********************* Exercise 3.22: *******************************/
 
-      // Utility
+    def addLists(as: Lijst[Int], bs: Lijst[Int]): Lijst[Int] = (as, bs) match {
+      case (Nil, _) => Nil
+      case (_, Nil) => Nil
+      case (Cons(a, ta), Cons(b, tb)) => Cons(a + b, addLists(ta, tb))
+    }
+
+
+
+    // Utility
 
     def apply[E](xs: E*): Lijst[E] =
       if (xs.isEmpty) Nil
@@ -297,7 +306,10 @@ object Chapter3 {
 
     println(s"filter(short)(even) = ${Lijst.filter(long)(i => 0 == i % 2).show}")
 
-    println("Lijst.flatMap(short){ i => Lijst(i,i )} = " +  Lijst.flatMap(short){ i => Lijst(i,i) }.show )
+    println("Lijst.flatMap(short){ i => Lijst(i,i )} = " + Lijst.flatMap(short) { i => Lijst(i, i) }.show)
+
+    println("addLists(short, short) = " + Lijst.addLists(short, short).show )
+    println("addLists(long, short) = " + Lijst.addLists(long, short).show )
 
     println("Ok")
   }
