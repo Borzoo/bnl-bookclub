@@ -181,7 +181,25 @@ object Chapter3 {
       case Cons(h, t) => Cons(f(h), map0(t)(f))
     }
 
+    // Use foldRightFromLeft is you want it tail recursive
     def map[A, B](xs: Lijst[A])(f: A => B): Lijst[B] = foldRight(xs, Nil: Lijst[B]) { (a, bs) => Cons(f(a), bs) }
+
+    /** ********************* Exercise 3.19: *******************************/
+
+    def filter0[A](l: Lijst[A])(f: A => Boolean): Lijst[A] = l match {
+      case Nil => Nil
+      case Cons(h, t) =>
+        if (f(h)) Cons(h, filter0(t)(f))
+        else filter0(t)(f)
+    }
+
+    def filter1[A](l: Lijst[A])(f: A => Boolean): Lijst[A] = foldLeft(reverse(l), Nil: Lijst[A]) { (as, a) =>
+      if (f(a)) Cons(a, as) else as
+    }
+
+    def filter[A](l: Lijst[A])(f: A => Boolean): Lijst[A] = foldRight(l, Nil: Lijst[A]) { (a, as) =>
+      if (f(a)) Cons(a, as) else as
+    }
 
     // Utility
 
@@ -262,6 +280,9 @@ object Chapter3 {
     println(s"doublesToStrings(ds0) = ${Lijst.doublesToStrings(ds0).show}")
 
     println(s"""map(short)( "a" * _ ) = ${Lijst.map(short)("a" * _).show}""")
+
+    println(s"filter(short)(even) = ${Lijst.filter(long)(i => 0 == i % 2).show}")
+
 
     println("Ok")
   }
