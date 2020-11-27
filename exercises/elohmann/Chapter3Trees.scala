@@ -52,37 +52,13 @@ object Chapter3Trees {
       case Branch(l, r) => f(fold(l, z)(g, f), fold(r, z)(g, f))
     }
 
-    def sizeF[E](t: Tree[E]): Int = {
-      def g[E](x: E): Int = 1
+    def sizeF[E](t: Tree[E]): Int =  fold(t, 0)( _ => 1, (l,r) => r + l)
 
-      def f(l: Int, r: Int): Int = r + l
+    def maximumF(t: Tree[Int]): Int = fold(t, Int.MinValue)(identity, (l,r) => l max r)
 
-      fold(t, 0)(g, f)
-    }
+    def depthF[E](t: Tree[E]): Int = fold(t, 0)(_ => 1, (l,r) => 1 + (l max r))
 
-    def maximumF(t: Tree[Int]): Int = {
-      def g(x: Int): Int = x
-
-      def f(l: Int, r: Int): Int = r max l
-
-      fold(t, Int.MinValue)(g, f)
-    }
-
-    def depthF[E](t: Tree[E]): Int = {
-      def g(x: E): Int = 1
-
-      def f(l: Int, r: Int): Int = 1 + (r max l)
-
-      fold(t, 0)(g, f)
-    }
-
-    def mapF[E, R](t: Tree[E])(h: E => R): Tree[R] = {
-      def g(x: E): Tree[R] = Leaf(h(x))
-
-      def f(l: Tree[R], r: Tree[R]): Tree[R] = Branch(l, r)
-
-      fold(t, Nil: Tree[R])(g, f)
-    }
+    def mapF[E, R](t: Tree[E])(h: E => R): Tree[R] = fold(t, Nil: Tree[R])( x => Leaf(h(x)), (l,r) => Branch(l, r) )
 
     // It folds both left and right
 
@@ -97,6 +73,7 @@ object Chapter3Trees {
         Tree.depth(tree) == 4 &&
         Tree.depthF(tree) == 4 &&
         Tree.map(tree)(_ * 2) == Tree.mapF(tree)(_ * 2) &&
+        Tree.maximum(Tree.map(tree)(_ * -1)) == 2
         true
     }
 
