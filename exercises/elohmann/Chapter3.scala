@@ -224,12 +224,20 @@ object Chapter3 {
 
     /** ********************* Exercise 3.23: *******************************/
 
-    def zipWith[E](as: Lijst[E], bs: Lijst[E])(f: (E,E) => E): Lijst[E] = (as, bs) match {
+    def zipWith[E](as: Lijst[E], bs: Lijst[E])(f: (E, E) => E): Lijst[E] = (as, bs) match {
       case (Nil, _) => Nil
       case (_, Nil) => Nil
-      case (Cons(a, ta), Cons(b, tb)) => Cons( f(a,b), zipWith(ta, tb)(f))
+      case (Cons(a, ta), Cons(b, tb)) => Cons(f(a, b), zipWith(ta, tb)(f))
     }
 
+    /** ********************* Exercise 3.24: *******************************/
+
+    def hasSubsequence[E](main: Lijst[E], sub: Lijst[E]): Boolean = (main, sub) match {
+      case (_, Nil) => true
+      case (Nil, _) => false
+      case (Cons(a, _), Cons(b, _)) if a != b => false
+      case (Cons(a, ta), Cons(b, tb)) if a == b => hasSubsequence(ta, tb)
+    }
 
     // Utility
 
@@ -315,10 +323,16 @@ object Chapter3 {
 
     println("Lijst.flatMap(short){ i => Lijst(i,i )} = " + Lijst.flatMap(short) { i => Lijst(i, i) }.show)
 
-    println("addLists(short, short) = " + Lijst.addLists(short, short).show )
-    println("addLists(long, short) = " + Lijst.addLists(long, short).show )
+    println("addLists(short, short) = " + Lijst.addLists(short, short).show)
+    println("addLists(long, short) = " + Lijst.addLists(long, short).show)
 
-    println("zipWith(short, long)( (a,b) => a * b ) = " +  Lijst.zipWith(short, long)( (a,b) => a * b ).show )
+    println("zipWith(short, long)( (a,b) => a * b ) = " + Lijst.zipWith(short, long)((a, b) => a * b).show)
+
+    println("hasSubsequence(long, short) = " + Lijst.hasSubsequence(long, short))
+    println("hasSubsequence(short, long) = " + Lijst.hasSubsequence(short, long))
+    println("hasSubsequence(short, short) = " + Lijst.hasSubsequence(short, short))
+    println("hasSubsequence(short, Nil) = " + Lijst.hasSubsequence(short, Nil))
+    println("hasSubsequence(Nil, Nil) = " + Lijst.hasSubsequence(Nil, Nil))
 
     println("Ok")
   }
