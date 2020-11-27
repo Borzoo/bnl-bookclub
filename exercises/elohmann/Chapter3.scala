@@ -222,6 +222,13 @@ object Chapter3 {
       case (Cons(a, ta), Cons(b, tb)) => Cons(a + b, addLists(ta, tb))
     }
 
+    /** ********************* Exercise 3.23: *******************************/
+
+    def zipWith[E](as: Lijst[E], bs: Lijst[E])(f: (E,E) => E): Lijst[E] = (as, bs) match {
+      case (Nil, _) => Nil
+      case (_, Nil) => Nil
+      case (Cons(a, ta), Cons(b, tb)) => Cons( f(a,b), zipWith(ta, tb)(f))
+    }
 
 
     // Utility
@@ -310,6 +317,8 @@ object Chapter3 {
 
     println("addLists(short, short) = " + Lijst.addLists(short, short).show )
     println("addLists(long, short) = " + Lijst.addLists(long, short).show )
+
+    println("zipWith(short, long)( (a,b) => a * b ) = " +  Lijst.zipWith(short, long)( (a,b) => a * b ).show )
 
     println("Ok")
   }
