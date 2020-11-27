@@ -250,89 +250,74 @@ object Chapter3 {
 
     val short = Lijst(1, 2, 3, 4, 5)
     val long = Lijst(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+    val ds0 = Lijst(1.0, 2.0, 0.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0)
 
-    def display[E](m: String, l: Lijst[E]): Unit = println(s"$m: ${l.show[E]}")
-
-    display("tail(Nil)", Lijst.tail(Nil))
-    display("tail(short)", Lijst.tail(short))
-
-    println("maybeTail(Nil): " + Lijst.maybeTail(Nil).map { l => s"Some(${l.show})" }.getOrElse("None"))
-    println("maybeTail(short): " + Lijst.maybeTail(short).map { l => s"Some(${l.show})" }.getOrElse("None"))
-
-    display("setHead(Nil,0)", Lijst.setHead(Nil, 0))
-    display("setHead(short,0)", Lijst.setHead(short, 0))
-
-    display("drop(Nil,5)", Lijst.drop(Nil, 5))
-    display("drop 0", Lijst.drop(short, 0))
-    display("drop short 3", Lijst.drop(short, 3))
-    display("drop short 10", Lijst.drop(short, 10))
+    def display[E](m: String, l: Lijst[E]): Unit = println(s"$m = ${l.show[E]}")
 
     def lessThan(n: Int)(i: Int): Boolean = i < n
 
-    display("dropWhile less then 4", Lijst.dropWhile(long, lessThan(4)))
+    Map(
+      "tail(Nil)" -> Lijst.tail(Nil),
+      "tail(short)" -> Lijst.tail(short),
+      "setHead(Nil,0)" -> Lijst.setHead(Nil, 0),
+      "setHead(short,0)" -> Lijst.setHead(short, 0),
+      "drop(Nil,5)" -> Lijst.drop(Nil, 5),
+      "drop(0,short)" -> Lijst.drop(short, 0),
+      "drop(short,3)" -> Lijst.drop(short, 3),
+      "drop(short,10)" -> Lijst.drop(short, 10),
+      "dropWhile less then 4" -> Lijst.dropWhile(long, lessThan(4)),
+      "init(long)" -> Lijst.init(long),
+      "exercise 3.8" -> foldRight(Lijst(1, 2, 3), Nil: Lijst[Int])(Cons(_, _)),
+      "reverse(Nil)" -> Lijst.reverse(Nil),
+      "reverse(Lijst(3))" -> Lijst.reverse(Lijst(3)),
+      "reverse(short)" -> Lijst.reverse(short),
+      "append(short, short)" -> Lijst.append(short, short),
+      "flatten(Nil)" -> Lijst.flatten(Nil),
+      "flatten(Lijst(Nil))" -> Lijst.flatten(Lijst(Nil)),
+      "flatten(Lijst(Nil, Nil))" -> Lijst.flatten(Lijst(Nil, Nil)),
+      "flatten(Lijst(Nil, short, Nil))" -> Lijst.flatten(Lijst(Nil, short, Nil)),
+      "flatten(Lijst(Nil, short,Nil, short)" -> Lijst.flatten(Lijst(Nil, short, Nil, short)),
+      "add1(short)" -> Lijst.add1(short),
+      "add2(short)" -> Lijst.add2(short),
+      "add3(short)" -> Lijst.add3(short),
+      "add4(short)" -> Lijst.add4(short),
+      "doublesToStrings(ds0)" -> Lijst.doublesToStrings(ds0),
+      """map(short)( "a" * _ )""" -> Lijst.map(short)("a" * _),
+      "filter(short)(even)" -> Lijst.filter(long)(i => 0 == i % 2),
+      "Lijst.flatMap(short){ i => Lijst(i,i )}" -> Lijst.flatMap(short) { i => Lijst(i, i) },
+      "addLists(short, short)" -> Lijst.addLists(short, short),
+      "addLists(long, short)" -> Lijst.addLists(long, short),
+      "zipWith(short, long)( (a,b) => a * b )" -> Lijst.zipWith(short, long)((a, b) => a * b)
+    ).foreach {
+      case (m, l) => println(m + " = " + l.show)
+    }
 
-    display("init(long)", Lijst.init(long))
-
-    val ds0 = Lijst(1.0, 2.0, 0.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0)
-
-    println(s"product(ds0): ${Lijst.product(ds0)}")
-    println(s"shortcutProduct(ds0): ${Lijst.shortcutProduct(ds0)}")
-
-    println("exercise 3.8: ", foldRight(Lijst(1, 2, 3), Nil: Lijst[Int])(Cons(_, _)))
-
-    println(s"length(short) = ${Lijst.lengthR(short)}")
-    println(s"length(long) = ${Lijst.lengthR(long)}")
-    println(s"length(ds0) = ${Lijst.lengthR(ds0)}")
-
-    println(s"foldLeft(1,2,3,4,5)(+) = ${Lijst.foldLeft(short, 0)(_ + _)}")
-    println(s"foldLeft(1,2,3,4,5)(-) = ${Lijst.foldLeft(short, 0)(_ - _)}")
-
-    println(s"foldRight(1,2,3,4,5)(+) = ${Lijst.foldRight(short, 0)(_ + _)}")
-    println(s"foldRight(1,2,3,4,5)(-) = ${Lijst.foldRight(short, 0)(_ - _)}")
-
-    println(s"sumL(short) = ${Lijst.sumL(short)}")
-    println(s"lengthL(short) = ${Lijst.lengthL(short)}")
-    println(s"productL(ds0) = ${Lijst.productL(ds0)}")
-
-    println(s"reverse(Nil) = ${Lijst.reverse(Nil).show}")
-    println(s"reverse(Lijst(3)) = ${Lijst.reverse(Lijst(3)).show}")
-    println(s"reverse(short) = ${Lijst.reverse(short).show}")
-
-    println(Lijst.append(short, short).show)
-
-    println(s"flatten(Nil) = ${Lijst.flatten(Nil)}")
-    println(s"flatten(Lijst(Nil)) = ${Lijst.flatten(Lijst(Nil))}")
-    println(s"flatten(Lijst(Nil, Nil)) = ${Lijst.flatten(Lijst(Nil, Nil))}")
-    println(s"flatten(Lijst(Nil, short, Nil)) = ${Lijst.flatten(Lijst(Nil, short, Nil)).show}")
-    println(s"flatten(Lijst(Nil, short,Nil, short) = ${Lijst.flatten(Lijst(Nil, short, Nil, short)).show}")
-
-    println(s"foldRightFromLeft(short,0)(-) = ${Lijst.foldRightFromLeft(short, 0)(_ - _)}")
-
-    println(s"foldLeftFromRight(short,0)(-) = ${Lijst.foldLeftFromRight(short, 0)(_ - _)}")
-
-    println(s"add1(short) = ${Lijst.add1(short).show}")
-    println(s"add2(short) = ${Lijst.add2(short).show}")
-    println(s"add3(short) = ${Lijst.add3(short).show}")
-    println(s"add4(short) = ${Lijst.add4(short).show}")
-
-    println(s"doublesToStrings(ds0) = ${Lijst.doublesToStrings(ds0).show}")
-
-    println(s"""map(short)( "a" * _ ) = ${Lijst.map(short)("a" * _).show}""")
-
-    println(s"filter(short)(even) = ${Lijst.filter(long)(i => 0 == i % 2).show}")
-
-    println("Lijst.flatMap(short){ i => Lijst(i,i )} = " + Lijst.flatMap(short) { i => Lijst(i, i) }.show)
-
-    println("addLists(short, short) = " + Lijst.addLists(short, short).show)
-    println("addLists(long, short) = " + Lijst.addLists(long, short).show)
-
-    println("zipWith(short, long)( (a,b) => a * b ) = " + Lijst.zipWith(short, long)((a, b) => a * b).show)
-
-    println("hasSubsequence(long, short) = " + Lijst.hasSubsequence(long, short))
-    println("hasSubsequence(short, long) = " + Lijst.hasSubsequence(short, long))
-    println("hasSubsequence(short, short) = " + Lijst.hasSubsequence(short, short))
-    println("hasSubsequence(short, Nil) = " + Lijst.hasSubsequence(short, Nil))
-    println("hasSubsequence(Nil, Nil) = " + Lijst.hasSubsequence(Nil, Nil))
+    Map(
+      "maybeTail(Nil)" -> Lijst.maybeTail(Nil).map { l => s"Some(${l.show})" }.getOrElse("None"),
+      "maybeTail(short)" -> Lijst.maybeTail(short).map { l => s"Some(${l.show})" }.getOrElse("None"),
+      "product(ds0)" -> Lijst.product(ds0),
+      "product(ds0)" -> Lijst.product(ds0),
+      "shortcutProduct(ds0)" -> Lijst.shortcutProduct(ds0),
+      "length(short)" -> Lijst.lengthR(short),
+      "length(long)" -> Lijst.lengthR(long),
+      "length(ds0)" -> Lijst.lengthR(ds0),
+      "foldLeft(1,2,3,4,5)(+)" -> Lijst.foldLeft(short, 0)(_ + _),
+      "foldLeft(1,2,3,4,5)(-)" -> Lijst.foldLeft(short, 0)(_ - _),
+      "foldRight(1,2,3,4,5)(+)" -> Lijst.foldRight(short, 0)(_ + _),
+      "foldRight(1,2,3,4,5)(-)" -> Lijst.foldRight(short, 0)(_ - _),
+      "sumL(short)" -> Lijst.sumL(short),
+      "lengthL(short)" -> Lijst.lengthL(short),
+      "productL(ds0)" -> Lijst.productL(ds0),
+      "foldRightFromLeft(short,0)(-)" -> Lijst.foldRightFromLeft(short, 0)(_ - _),
+      "foldLeftFromRight(short,0)(-)" -> Lijst.foldLeftFromRight(short, 0)(_ - _),
+      "hasSubsequence(long, short)" -> Lijst.hasSubsequence(long, short),
+      "hasSubsequence(short, long)" -> Lijst.hasSubsequence(short, long),
+      "hasSubsequence(short, short)" -> Lijst.hasSubsequence(short, short),
+      "hasSubsequence(short, Nil)" -> Lijst.hasSubsequence(short, Nil),
+      "hasSubsequence(Nil, Nil)" -> Lijst.hasSubsequence(Nil, Nil)
+    ).foreach {
+      case (m, s) => println(m + " = " + s)
+    }
 
     println("Ok")
   }
