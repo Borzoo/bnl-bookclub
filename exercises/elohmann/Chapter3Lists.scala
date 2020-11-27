@@ -1,8 +1,8 @@
-import Chapter3.Lijst.foldRight
+import Chapter3Lists.Lijst.foldRight
 
 import scala.annotation.tailrec
 
-object Chapter3 {
+object Chapter3Lists {
 
   sealed trait Lijst[+E] {
     def show[E2]: String
@@ -251,8 +251,6 @@ object Chapter3 {
     val short = Lijst(1, 2, 3, 4, 5)
     val long = Lijst(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
     val ds0 = Lijst(1.0, 2.0, 0.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0, 9.0)
-
-    def display[E](m: String, l: Lijst[E]): Unit = println(s"$m = ${l.show[E]}")
 
     def lessThan(n: Int)(i: Int): Boolean = i < n
 
