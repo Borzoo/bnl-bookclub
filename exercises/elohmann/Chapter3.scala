@@ -197,7 +197,7 @@ object Chapter3 {
       if (f(a)) Cons(a, as) else as
     }
 
-    def filter[A](l: Lijst[A])(f: A => Boolean): Lijst[A] = foldRight(l, Nil: Lijst[A]) { (a, as) =>
+    def filter2[A](l: Lijst[A])(f: A => Boolean): Lijst[A] = foldRight(l, Nil: Lijst[A]) { (a, as) =>
       if (f(a)) Cons(a, as) else as
     }
 
@@ -207,8 +207,15 @@ object Chapter3 {
       (a, bs) => append(f(a), bs)
     }
 
+    /** ********************* Exercise 3.21: *******************************/
 
-    // Utility
+    def filter[A](l: Lijst[A])(f: A => Boolean): Lijst[A] = flatMap(l){ a =>
+      if ( f(a) ) Lijst(a)
+      else Nil
+    }
+
+
+      // Utility
 
     def apply[E](xs: E*): Lijst[E] =
       if (xs.isEmpty) Nil
