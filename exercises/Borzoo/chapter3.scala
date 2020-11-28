@@ -92,6 +92,55 @@ def length(l: List[Int]): Int = foldLeft(l, 0)((_, len) => len + 1)
 // 12
 def reverse[A](l: List[A]): List[A] = foldLeft[A, List[A]](l, Nil)(Cons(_, _))
 
+// 13
+throw new Error
+
+// 14
+def append[A](l1: List[A], l2: List[A]): List[A] =
+  foldRight(l1, l2)(Cons(_, _))
+
+// 15
+def flatten[A](ls: List[List[A]]): List[A] =
+  foldRight[List[A], List[A]](ls, Nil)(append)
+
+// 16
+def add1(l: List[Int]): List[Int] =
+  foldRight[Int, List[Int]](l, Nil)((a, b) => Cons(a + 1, b))
+
+// 17
+def doubleToString(l: List[Double]): List[String] =
+  foldRight[Double, List[String]](l, Nil)((a, b) => Cons(a.toString, b))
+
+// 18
+def map[A, B](l: List[A])(f: A => B): List[B] =
+  foldRight[A, List[B]](l, Nil)((a, b) => Cons(f(a), b))
+
+// 19
+def filter[A](l: List[A])(p: A => Boolean): List[A] =
+  foldRight[A, List[A]](l, Nil)((a, b) => if (p(a)) Cons(a, b) else b)
+
+def evens(l: List[Int]) = filter(l)(_ % 2 == 0)
+
+// 20
+def flatMap[A, B](l: List[A])(f: A => List[B]): List[B] = flatten(map(l)(f))
+
+// 21
+def filterByFlatMap[A](l: List[A])(p: A => Boolean): List[A] = flatMap(l)(a => if (p(a)) List(a) else Nil)
+
+// 22
+def addLists(l1: List[Int], l2: List[Int]): List[Int] = (l1, l2) match {
+  case (Cons(h1, t1), Cons(h2, t2)) => Cons(h1 + h2, addLists(t1, t2))
+  case _ => Nil
+}
+
+// 23
+def zipWith[A](l1: List[A], l2: List[A])(f: (A, A) => A): List[A] = (l1, l2) match {
+  case (Cons(h1, t1), Cons(h2, t2)) => Cons(f(h1, h2), zipWith(t1, t2)(f))
+  case _ => Nil
+}
+
+
+
 
 
 
