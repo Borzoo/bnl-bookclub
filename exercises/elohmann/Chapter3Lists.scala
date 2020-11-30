@@ -137,11 +137,21 @@ object Chapter3Lists {
       foldLeft(l, Nil: Lijst[E])((l, e) => Cons(e, l))
     }
 
+    def reverseR[E](l: Lijst[E]): Lijst[E] = {
+      // This is very inefficient
+      def setLast[E](e: E, l: Lijst[E]) : Lijst[E] = l match {
+        case Nil => Cons(e, Nil)
+        case Cons(h,t) => Cons(h, setLast(e,t) )
+      }
+
+      foldRight(l, Nil: Lijst[E])((e, l) => setLast(e,l))
+    }
+
     /** ********************* Exercise 3.13: *******************************/
 
-    def foldRightFromLeft[E, R](l: Lijst[E], z: R)(f: (E, R) => R): R = foldLeft(reverse(l), z)((a, b) => f(b, a))
+    def foldRightFromLeft[E, R](l: Lijst[E], z: R)(f: (E, R) => R): R = foldLeft(reverse(l), z)((r, e) => f(e, r))
 
-    def foldLeftFromRight[E, R](l: Lijst[E], z: R)(f: (R, E) => R): R = foldRight(reverse(l), z)((a, b) => f(b, a))
+    def foldLeftFromRight[E, R](l: Lijst[E], z: R)(f: (R, E) => R): R = foldRight(reverseR(l), z)((r, e) => f(e, r))
 
     /** ********************* Exercise 3.14: *******************************/
 
@@ -269,6 +279,7 @@ object Chapter3Lists {
       "reverse(Nil)" -> Lijst.reverse(Nil),
       "reverse(Lijst(3))" -> Lijst.reverse(Lijst(3)),
       "reverse(short)" -> Lijst.reverse(short),
+      "reverseR(short)" -> Lijst.reverseR(short),
       "append(short, short)" -> Lijst.append(short, short),
       "flatten(Nil)" -> Lijst.flatten(Nil),
       "flatten(Lijst(Nil))" -> Lijst.flatten(Lijst(Nil)),
