@@ -8,6 +8,20 @@ object Chapter3TreesBetter {
 
   object Tree {
 
+    def apply[E](xs: E*): Tree[E] = xs.size match {
+      case 0 => Nil
+      case 1 => Branch(xs.head, Nil, Nil)
+      case n => {
+        val half = math.ceil((n - 1) / 2.0).toInt
+        Branch(
+          xs.head,
+          apply(xs.tail.take(half): _*),
+          apply(xs.tail.drop(half): _*)
+        )
+      }
+    }
+
+
     /** ********************* Exercise 3.25: *******************************/
 
     def size[E](t: Tree[E]): Int = t match {
@@ -56,17 +70,16 @@ object Chapter3TreesBetter {
   }
 
   def test(): Boolean = {
-    val subTree = Branch(2, Branch(-2, Nil, Nil), Nil)
-    val tree = Branch(7, subTree, subTree)
+    val tree = Tree(1,2,-2,0,0,0,0,0)
 
-    Tree.size(tree) == 4 &&
-      Tree.sizeF(tree) == 4 &&
-      Tree.maximum(tree) == 1 &&
-      Tree.maximumF(tree) == 1 &&
-      Tree.depth(tree) == 4 &&
-      Tree.depthF(tree) == 4 &&
-      Tree.map(tree)(_ * 2) == Tree.mapF(tree)(_ * 2) &&
-      Tree.maximum(Tree.map(tree)(_ * -1)) == 2
+    Tree.size(tree) == 8 &&
+    Tree.sizeF(tree) == 8 &&
+    Tree.maximum(tree) == 2 &&
+    Tree.maximumF(tree) == 2 &&
+    Tree.depth(tree) == 4 &&
+    Tree.depthF(tree) == 4 &&
+    Tree.map(tree)(_ * 2) == Tree.mapF(tree)(_ * 2) &&
+    Tree.maximum(Tree.map(tree)(_ * -1)) == 2 &&
     true
   }
 
