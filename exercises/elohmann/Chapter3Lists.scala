@@ -191,7 +191,7 @@ object Chapter3Lists {
       case Cons(h, t) => Cons(f(h), map0(t)(f))
     }
 
-    // Use foldRightFromLeft is you want it tail recursive
+    // Use foldRightFromLeft if you want it tail recursive
     def map[A, B](xs: Lijst[A])(f: A => B): Lijst[B] = foldRight(xs, Nil: Lijst[B]) { (a, bs) => Cons(f(a), bs) }
 
     /** ********************* Exercise 3.19: *******************************/
