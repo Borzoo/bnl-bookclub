@@ -93,7 +93,9 @@ def length(l: List[Int]): Int = foldLeft(l, 0)((_, len) => len + 1)
 def reverse[A](l: List[A]): List[A] = foldLeft[A, List[A]](l, Nil)(Cons(_, _))
 
 // 13
-throw new Error
+def foldRightByFoldLeft[A, B](l: List[A], init: B)(f: (A, B) => B): B = {
+  foldLeft(l, (b: B) => b)((a, g) => c => g(f(a, c)))(init)
+}
 
 // 14
 def append[A](l1: List[A], l2: List[A]): List[A] =
