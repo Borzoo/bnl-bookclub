@@ -245,8 +245,8 @@ object Chapter3Lists {
     def hasSubsequence[E](main: Lijst[E], sub: Lijst[E]): Boolean = (main, sub) match {
       case (_, Nil) => true
       case (Nil, _) => false
-      case (Cons(a, _), Cons(b, _)) if a != b => false
       case (Cons(a, ta), Cons(b, tb)) if a == b => hasSubsequence(ta, tb)
+      case (Cons(_, ta), bs)  => hasSubsequence(ta, bs)
     }
 
     // Utility
