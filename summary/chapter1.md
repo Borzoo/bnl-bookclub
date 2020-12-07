@@ -1,4 +1,4 @@
-#Chapter 1
+# Chapter 1
 What is functional programming?
 ## Summary
 - Functional programming is based on a simple premise. We use pure functions to construct programs.
