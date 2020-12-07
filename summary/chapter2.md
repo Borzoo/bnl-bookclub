@@ -1,4 +1,4 @@
-#Chapter 2
+# Chapter 2
 Getting started with functional programming in Scala
 
 ## Summary
