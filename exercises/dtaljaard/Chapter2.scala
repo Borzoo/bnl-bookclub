@@ -1,3 +1,7 @@
+package dt.fpinscala.ch2
+
+import scala.annotation.tailrec
+
 object Chapter2 extends App {
 
   // 2.1 --------------------------------------------------
@@ -40,23 +44,30 @@ object Chapter2 extends App {
     loop(0)
   }
 
+  @tailrec
+  def isSorted2[A](as: Array[A], ordered: (A, A) => Boolean): Boolean = as match {
+    case Array() | Array(_) => true
+    case Array(a, b, _*) => ordered(a, b) && isSorted2(as.drop(1), ordered)
+  }
+
   val a = Array(-1, 1, 3, 5)
   println(isSorted(a, ordered))
-
+  println(isSorted2(a, ordered))
 
   // 2.3 --------------------------------------------------
-  def curry[A,B,C](f: (A, B) => C): A => (B => C) =
+  def curry[A, B, C](f: (A, B) => C): A => (B => C) =
     a => b => f(a, b)
 
   // 2.4 --------------------------------------------------
-  def uncurry[A,B,C](f: A => B => C): (A, B) => C =
+  def uncurry[A, B, C](f: A => B => C): (A, B) => C =
     (a, b) => f(a)(b)
 
   // 2.5 --------------------------------------------------
-  def compose[A,B,C](f: B => C, g: A => B): A => C =
+  def compose[A, B, C](f: B => C, g: A => B): A => C =
     a => f(g(a))
 
   def inc: Int => Int = num => num + 1
+
   val plus2: Int => Int = compose(inc, inc)
   val plus3: Int => Int = compose(plus2, inc)
   println(plus2(1))
