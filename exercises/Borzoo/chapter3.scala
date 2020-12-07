@@ -139,8 +139,89 @@ def zipWith[A](l1: List[A], l2: List[A])(f: (A, A) => A): List[A] = (l1, l2) mat
   case _ => Nil
 }
 
+// 24
+def hasSubsequence[A](l1: List[A], l2: List[A]): Boolean = {
+  @tailrec
+  def startsWith(l1: List[A], l2: List[A]): Boolean = {
+    (l1, l2) match {
+      case (Cons(h1, t1), Cons(h2, t2)) if h1 == h2 => startsWith(t1, t2)
+      case (_, Nil)                                 => true
+      case (Nil, _)                                 => false
+      case _                                        => false
+    }
+  }
 
+  @tailrec
+  def go(l1: List[A], l2: List[A]): Boolean = {
+    if (startsWith(l1, l2))
+      true
+    else if (l1 != Nil)
+      go(tail(l1), l2)
+    else
+      false
+  }
 
+  go(l1, l2)
+}
 
+sealed trait Tree[+A]
 
+case class Leaf[A](value: A) extends Tree[A]
 
+case class Branch[A](left: Tree[A], right: Tree[A]) extends Tree[A]
+
+// 25
+def size[A](t: Tree[A]): Int = {
+  t match {
+    case Leaf(_)      => 1
+    case Branch(l, r) => 1 + size(l) + size(r)
+  }
+}
+
+// 26
+def maximum(t: Tree[Int]): Int = {
+  t match {
+    case Leaf(v) => v
+    case Branch(l, r) => maximum(l).max(maximum(r))
+  }
+}
+
+// 27
+def maxDepth[A](t: Tree[A]): Int = {
+  t match {
+    case Leaf(_) => 0
+    case Branch(l, r) => maxDepth(l).max(maxDepth(r)) + 1
+  }
+}
+
+// 28
+def map[A, B](t: Tree[A])(f: A => B): Tree[B] = {
+  t match {
+    case Leaf(v) => Leaf(f(v))
+    case Branch(l, r) => Branch(map(l)(f), map(r)(f))
+  }
+}
+
+// 29
+def fold[A, B](t: Tree[A])(f: A => B, g: (B, B) => B): B = {
+  t match {
+    case Leaf(v) => f(v)
+    case Branch(l, r) => g(fold(l)(f, g), fold(r)(f, g))
+  }
+}
+
+def mapFold[A, B](t: Tree[A])(f: A => B): Tree[B] = {
+  fold[A, Tree[B]](t)(v => Leaf(f(v)), (l, r) => Branch(l, r))
+}
+
+def sizeFold[A](t: Tree[A]): Int = {
+  fold[A, Int](t)(_ => 1, (l, r) => 1 + l + r)
+}
+
+def maximumFold(t: Tree[Int]): Int = {
+  fold[Int, Int](t)(identity, (l, r) => l max r)
+}
+
+def depthFold[A](t: Tree[A]): Int = {
+  fold[A, Int](t)(_ => 0, (l, r) => 1 + (l max r))
+}
